@@ -118,7 +118,7 @@ function ContentDisplay({ content, isRoast }: { content: string[]; isRoast: bool
                 animate={{ opacity: 1, scale: 1 }}
                 className="absolute -right-2 -bottom-2 text-xl"
               >
-                {['💀', '🔥', '😭', '💅'][index % 4]}
+                {['💀', '🔥', '😭', '💅', '🤡', '☠️'][index % 6]}
               </motion.span>
             )}
             {!isRoast && index === visibleLines - 1 && (
@@ -127,7 +127,7 @@ function ContentDisplay({ content, isRoast }: { content: string[]; isRoast: bool
                 animate={{ opacity: 1, scale: 1 }}
                 className="absolute -right-2 -bottom-2 text-xl"
               >
-                {['💕', '🌟', '✨', '🎉'][index % 4]}
+                {['💕', '🌟', '✨', '🎉', '🌸', '💗'][index % 6]}
               </motion.span>
             )}
           </motion.div>
