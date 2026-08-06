@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[97367,["/lover/_next/static/chunks/2f236954d6a65e12.js"],"ViewportBoundary"]
+3:I[97367,["/lover/_next/static/chunks/2f236954d6a65e12.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[27201,["/lover/_next/static/chunks/2f236954d6a65e12.js"],"IconMark"]
+0:{"buildId":"d3NLaaonfAMZEb4dZ5Vcb","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"恋爱人格测试 | 测测你的恋爱隐藏人格"}],["$","meta","1",{"name":"description","content":"6道题测出你的恋爱隐藏人格，可以选择被使劲夸或者被使劲骂！"}],["$","meta","2",{"name":"keywords","content":"恋爱人格,性格测试,恋爱,趣味测试"}],["$","link","3",{"rel":"icon","href":"https://z-cdn.chatglm.cn/z-ai/static/logo.svg"}],["$","$L5","4",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"loading":null,"isPartial":false}
