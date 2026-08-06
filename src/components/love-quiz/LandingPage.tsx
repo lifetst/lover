@@ -54,7 +54,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-rose-200/50 text-sm text-rose-600 font-medium">
             <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
-            你朋友非要你测的那个测试
+            来看看你的恋爱机遇
           </span>
         </motion.div>
 
@@ -88,14 +88,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
         >
  8 道题，测出你恋爱中隐藏的真实人格
         </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
-          className="text-sm text-gray-400 mb-10"
-        >
-          测完可以选择被使劲夸或者被使劲骂
-        </motion.p>
+
 
         {/* CTA Button */}
         <motion.div
