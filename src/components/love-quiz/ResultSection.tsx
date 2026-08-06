@@ -1,8 +1,24 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ThumbsUp, Flame, RotateCcw, Share2 } from 'lucide-react';
+import {
+  ThumbsUp,
+  Flame,
+  RotateCcw,
+  Share2,
+  Heart,
+  MessageCircleHeart,
+  Shield,
+  AlertTriangle,
+  Sparkles,
+  Target,
+  XCircle,
+  CheckCircle2,
+  Lightbulb,
+  Flag,
+  ArrowRight,
+} from 'lucide-react';
 import { type Personality } from '@/data/quiz';
 
 interface ResultSectionProps {
@@ -12,6 +28,33 @@ interface ResultSectionProps {
 
 type DisplayMode = 'choose' | 'praise' | 'roast';
 
+/* ---------- info card types ---------- */
+interface InfoCardProps {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+  gradient: string;
+  delay: number;
+}
+
+function InfoCard({ icon, label, children, gradient, delay }: InfoCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.5 }}
+      className={`rounded-2xl p-4 bg-gradient-to-br ${gradient} border border-white/50`}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-base">{icon}</span>
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{label}</span>
+      </div>
+      <div className="text-sm text-gray-700 leading-relaxed">{children}</div>
+    </motion.div>
+  );
+}
+
+/* ---------- content display with line-by-line reveal ---------- */
 function ContentDisplay({
   content,
   isRoast,
@@ -23,7 +66,6 @@ function ContentDisplay({
 }) {
   const [visibleLines, setVisibleLines] = useState(0);
 
-  // Use callback ref approach to start the reveal animation on mount
   const handleRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) return;
@@ -43,7 +85,7 @@ function ContentDisplay({
 
   return (
     <div ref={handleRef}>
-      {/* Mode header */}
+      {/* header */}
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={onSwitch}
@@ -61,7 +103,7 @@ function ContentDisplay({
         <div className="w-12" />
       </div>
 
-      {/* Content lines */}
+      {/* lines */}
       <div className="space-y-4">
         {content.map((line, index) => (
           <motion.div
@@ -72,17 +114,14 @@ function ContentDisplay({
                 ? { opacity: 1, x: 0, scale: 1 }
                 : { opacity: 0, x: isRoast ? -30 : 30, scale: 0.9 }
             }
-            transition={{
-              duration: 0.5,
-              ease: 'easeOut',
-            }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className={`relative p-5 rounded-2xl backdrop-blur-sm ${
               isRoast
                 ? 'bg-gradient-to-r from-red-50 to-orange-50 border border-red-200/50'
                 : 'bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50'
             }`}
           >
-            {/* Line number badge */}
+            {/* number badge */}
             <div
               className={`absolute -left-2 -top-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                 isRoast ? 'bg-red-500' : 'bg-amber-500'
@@ -90,16 +129,7 @@ function ContentDisplay({
             >
               {index + 1}
             </div>
-
-            <p
-              className={`text-base leading-relaxed ${
-                isRoast ? 'text-gray-700' : 'text-gray-700'
-              }`}
-            >
-              {line}
-            </p>
-
-            {/* Emoji decoration for roast */}
+            <p className="text-base leading-relaxed text-gray-700">{line}</p>
             {isRoast && index === visibleLines - 1 && (
               <motion.span
                 initial={{ opacity: 0, scale: 0 }}
@@ -109,8 +139,6 @@ function ContentDisplay({
                 {['💀', '🔥', '😭', '💅'][index % 4]}
               </motion.span>
             )}
-
-            {/* Emoji decoration for praise */}
             {!isRoast && index === visibleLines - 1 && (
               <motion.span
                 initial={{ opacity: 0, scale: 0 }}
@@ -124,7 +152,7 @@ function ContentDisplay({
         ))}
       </div>
 
-      {/* Loading indicator */}
+      {/* loading dots */}
       {visibleLines < content.length && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -135,18 +163,14 @@ function ContentDisplay({
             <motion.div
               key={i}
               animate={{ scale: [1, 1.4, 1], opacity: [0.5, 1, 0.5] }}
-              transition={{
-                duration: 0.8,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
+              transition={{ duration: 0.8, repeat: Infinity, delay: i * 0.2 }}
               className={`w-2 h-2 rounded-full ${isRoast ? 'bg-red-400' : 'bg-amber-400'}`}
             />
           ))}
         </motion.div>
       )}
 
-      {/* All content revealed */}
+      {/* all revealed */}
       {visibleLines >= content.length && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -157,103 +181,167 @@ function ContentDisplay({
           <p className="text-sm text-gray-400">
             {isRoast ? '疼吗？要不再来一次？' : '怎么样，开心了吗？'}
           </p>
-          <div className="flex gap-3">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onSwitch}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer
-                ${
-                  isRoast
-                    ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                    : 'bg-red-100 text-red-700 hover:bg-red-200'
-                }`}
-            >
-              {isRoast ? (
-                <>
-                  <ThumbsUp className="w-4 h-4" />
-                  换个夸夸
-                </>
-              ) : (
-                <>
-                  <Flame className="w-4 h-4" />
-                  换个骂骂
-                </>
-              )}
-            </motion.button>
-          </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onSwitch}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+              isRoast
+                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                : 'bg-red-100 text-red-700 hover:bg-red-200'
+            }`}
+          >
+            {isRoast ? (
+              <>
+                <ThumbsUp className="w-4 h-4" />
+                换个夸夸
+              </>
+            ) : (
+              <>
+                <Flame className="w-4 h-4" />
+                换个骂骂
+              </>
+            )}
+          </motion.button>
         </motion.div>
       )}
     </div>
   );
 }
 
+/* ===================== MAIN ===================== */
 export default function ResultSection({ personality, onRestart }: ResultSectionProps) {
   const [mode, setMode] = useState<DisplayMode>('choose');
+  const [showProfile, setShowProfile] = useState(false);
 
   const isRoast = mode === 'roast';
   const content = mode === 'praise' ? personality.praise : personality.roast;
 
+  // stagger in profile cards after a brief delay
+  const cardData = [
+    {
+      icon: <MessageCircleHeart className="w-4 h-4 text-rose-500" />,
+      label: '爱的语言',
+      text: personality.loveLanguage,
+      gradient: 'from-rose-50 to-pink-50',
+    },
+    {
+      icon: <Shield className="w-4 h-4 text-emerald-500" />,
+      label: '最强武器',
+      text: personality.strength,
+      gradient: 'from-emerald-50 to-green-50',
+    },
+    {
+      icon: <AlertTriangle className="w-4 h-4 text-amber-500" />,
+      label: '致命软肋',
+      text: personality.weakness,
+      gradient: 'from-amber-50 to-yellow-50',
+    },
+    {
+      icon: <Heart className="w-4 h-4 text-red-500" />,
+      label: '分手预警',
+      text: personality.breakupReason,
+      gradient: 'from-red-50 to-rose-50',
+    },
+    {
+      icon: <Target className="w-4 h-4 text-cyan-500" />,
+      label: '最佳搭档',
+      text: personality.bestMatch,
+      gradient: 'from-cyan-50 to-sky-50',
+    },
+    {
+      icon: <XCircle className="w-4 h-4 text-orange-500" />,
+      label: '最怕遇到',
+      text: personality.worstMatch,
+      gradient: 'from-orange-50 to-amber-50',
+    },
+    {
+      icon: <Sparkles className="w-4 h-4 text-violet-500" />,
+      label: '经典场景',
+      text: personality.classicScenario,
+      gradient: 'from-violet-50 to-purple-50',
+    },
+    {
+      icon: <Lightbulb className="w-4 h-4 text-yellow-600" />,
+      label: '恋爱忠告',
+      text: personality.loveTip,
+      gradient: 'from-yellow-50 to-amber-50',
+    },
+    {
+      icon: <Flag className="w-4 h-4 text-red-400" />,
+      label: '红旗信号',
+      text: personality.redFlag,
+      gradient: 'from-red-50/60 to-orange-50/60',
+    },
+    {
+      icon: <CheckCircle2 className="w-4 h-4 text-green-500" />,
+      label: '绿灯信号',
+      text: personality.greenFlag,
+      gradient: 'from-green-50 to-emerald-50',
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-rose-50/20 to-white">
-      {/* Main content */}
-      <div className="flex-1 flex flex-col items-center justify-start px-4 pt-8 pb-24">
+      {/* ---------- main scrollable content ---------- */}
+      <div className="flex-1 flex flex-col items-center justify-start px-4 pt-8 pb-28">
         <div className="w-full max-w-lg mx-auto">
-          {/* Personality Type Card */}
+          {/* ======== personality reveal card ======== */}
           <motion.div
             initial={{ opacity: 0, scale: 0.7, rotateY: -15 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 0.8, type: 'spring', stiffness: 120 }}
             className="relative"
           >
-            {/* Decorative glow */}
             <div
               className="absolute -inset-4 rounded-3xl blur-2xl opacity-30"
               style={{
                 background: `linear-gradient(135deg, ${personality.color}40, ${personality.color}10)`,
               }}
             />
-
-            {/* Card */}
             <div
               className={`relative rounded-3xl p-8 bg-gradient-to-br ${personality.bgGradient} border border-white/50 shadow-xl overflow-hidden`}
             >
-              {/* Inner decorative circles */}
               <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -translate-y-1/2 translate-x-1/2" />
               <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/5 translate-y-1/2 -translate-x-1/2" />
 
               <div className="relative text-center">
-                {/* Emoji with animation */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 0.3, duration: 0.6, type: 'spring', stiffness: 200 }}
-                  className="text-6xl mb-4"
+                  className="text-6xl mb-3"
                 >
                   {personality.emoji}
                 </motion.div>
 
-                {/* Name with gradient */}
                 <motion.h2
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.5 }}
-                  className={`text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${personality.textGradient} mb-2`}
+                  className={`text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${personality.textGradient} mb-1`}
                 >
                   {personality.name}
                 </motion.h2>
 
-                {/* Subtitle */}
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
+                  transition={{ delay: 0.65 }}
+                  className="text-xs text-gray-400 font-medium tracking-wider mb-2"
+                >
+                  {personality.englishName}
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.75 }}
                   className="text-sm text-gray-500 mb-4"
                 >
                   {personality.subtitle}
                 </motion.p>
 
-                {/* Description */}
                 <motion.p
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -266,11 +354,56 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
             </div>
           </motion.div>
 
-          {/* Mode choice / content display */}
+          {/* ======== expand profile button ======== */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
+            className="mt-6"
+          >
+            <button
+              onClick={() => setShowProfile((p) => !p)}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/60 backdrop-blur-sm border border-rose-100/50 text-sm text-gray-500 hover:text-gray-700 hover:bg-white/90 transition-all cursor-pointer"
+            >
+              {showProfile ? '收起详情' : '查看完整恋爱档案'}
+              <ArrowRight
+                className={`w-4 h-4 transition-transform ${showProfile ? 'rotate-90' : '-rotate-90'}`}
+              />
+            </button>
+          </motion.div>
+
+          {/* ======== profile info grid ======== */}
+          <AnimatePresence>
+            {showProfile && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5 }}
+                className="overflow-hidden"
+              >
+                <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {cardData.map((card, i) => (
+                    <InfoCard
+                      key={card.label}
+                      icon={card.icon}
+                      label={card.label}
+                      gradient={card.gradient}
+                      delay={i * 0.06}
+                    >
+                      {card.text}
+                    </InfoCard>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* ======== praise / roast choice ======== */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 0.5 }}
             className="mt-8"
           >
             <AnimatePresence mode="wait">
@@ -282,7 +415,7 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
                   exit={{ opacity: 0, y: -10 }}
                   className="text-center"
                 >
-                  <p className="text-gray-500 text-sm mb-5">选择你的命运吧 ↓</p>
+                  <p className="text-gray-500 text-sm mb-5">准备好了吗？选择你的命运 ↓</p>
                   <div className="flex gap-3 justify-center">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -332,7 +465,7 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
         </div>
       </div>
 
-      {/* Bottom action bar */}
+      {/* ======== sticky bottom bar ======== */}
       <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-rose-100/50 z-20">
         <div className="max-w-lg mx-auto px-6 py-3 flex items-center justify-between">
           <button
@@ -347,7 +480,7 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
               if (navigator.share) {
                 navigator.share({
                   title: `我的恋爱人格是${personality.emoji}${personality.name}`,
-                  text: `我刚测了恋爱人格，结果是「${personality.name}」——${personality.subtitle}！你也来测测吧~`,
+                  text: `我刚测了恋爱人格，结果是「${personality.name}」(${personality.englishName})——${personality.subtitle}！你也来测测吧~`,
                 });
               }
             }}

@@ -86,7 +86,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="text-lg sm:text-xl text-gray-600 mb-4 leading-relaxed"
         >
- 6 道题，测出你恋爱中隐藏的真实人格
+ 8 道题，测出你恋爱中隐藏的真实人格
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -125,7 +125,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           transition={{ duration: 0.8, delay: 1.4 }}
           className="mt-16 flex flex-wrap justify-center gap-3"
         >
-          {['🌹 玫瑰骑士', '🧊 冰山分析家', '☀️ 阳光金毛', '🌙 月影猫咪', '🛡️ 骑士守护者', '🦅 自由飞鸟'].map(
+          {['🎩 恋爱魔法师', '🐱 老板猫', '💖 恋爱怪兽', '🐕 忠犬八公', '💎 隐藏宝贝', '🦎 完美变色龙'].map(
             (type, i) => (
               <motion.span
                 key={type}
