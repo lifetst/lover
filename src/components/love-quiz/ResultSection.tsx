@@ -3,11 +3,8 @@
 import { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ThumbsUp,
-  Flame,
   RotateCcw,
   Share2,
-  Heart,
   MessageCircleHeart,
   Shield,
   AlertTriangle,
@@ -23,12 +20,11 @@ import { type Personality } from '@/data/quiz';
 
 interface ResultSectionProps {
   personality: Personality;
+  isRoast: boolean;
   onRestart: () => void;
 }
 
-type DisplayMode = 'choose' | 'praise' | 'roast';
-
-/* ---------- info card types ---------- */
+/* ---------- info card ---------- */
 interface InfoCardProps {
   icon: React.ReactNode;
   label: string;
@@ -55,15 +51,7 @@ function InfoCard({ icon, label, children, gradient, delay }: InfoCardProps) {
 }
 
 /* ---------- content display with line-by-line reveal ---------- */
-function ContentDisplay({
-  content,
-  isRoast,
-  onSwitch,
-}: {
-  content: string[];
-  isRoast: boolean;
-  onSwitch: () => void;
-}) {
+function ContentDisplay({ content, isRoast }: { content: string[]; isRoast: boolean }) {
   const [visibleLines, setVisibleLines] = useState(0);
 
   const handleRef = useCallback(
@@ -85,22 +73,17 @@ function ContentDisplay({
 
   return (
     <div ref={handleRef}>
-      {/* header */}
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={onSwitch}
-          className="text-sm text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-        >
-          ← 换一个
-        </button>
+      {/* header badge */}
+      <div className="flex items-center justify-center mb-6">
         <span
-          className={`text-xs font-medium px-3 py-1 rounded-full ${
-            isRoast ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-600'
+          className={`text-xs font-medium px-4 py-1.5 rounded-full ${
+            isRoast
+              ? 'bg-red-100 text-red-600'
+              : 'bg-amber-100 text-amber-600'
           }`}
         >
-          {isRoast ? '🔥 输出火力' : '✨ 暴力夸夸'}
+          {isRoast ? '🔥 恋爱诊断报告' : '✨ 你的恋爱超能力'}
         </span>
-        <div className="w-12" />
       </div>
 
       {/* lines */}
@@ -121,7 +104,6 @@ function ContentDisplay({
                 : 'bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50'
             }`}
           >
-            {/* number badge */}
             <div
               className={`absolute -left-2 -top-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                 isRoast ? 'bg-red-500' : 'bg-amber-500'
@@ -170,39 +152,17 @@ function ContentDisplay({
         </motion.div>
       )}
 
-      {/* all revealed */}
+      {/* all revealed footer */}
       {visibleLines >= content.length && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-8 flex flex-col items-center gap-3"
+          className="mt-8 text-center"
         >
           <p className="text-sm text-gray-400">
-            {isRoast ? '疼吗？要不再来一次？' : '怎么样，开心了吗？'}
+            {isRoast ? '别生气，都是善意的提醒~ 💪' : '就是这么优秀，不接受反驳 😎'}
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onSwitch}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
-              isRoast
-                ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                : 'bg-red-100 text-red-700 hover:bg-red-200'
-            }`}
-          >
-            {isRoast ? (
-              <>
-                <ThumbsUp className="w-4 h-4" />
-                换个夸夸
-              </>
-            ) : (
-              <>
-                <Flame className="w-4 h-4" />
-                换个骂骂
-              </>
-            )}
-          </motion.button>
         </motion.div>
       )}
     </div>
@@ -210,14 +170,12 @@ function ContentDisplay({
 }
 
 /* ===================== MAIN ===================== */
-export default function ResultSection({ personality, onRestart }: ResultSectionProps) {
-  const [mode, setMode] = useState<DisplayMode>('choose');
+export default function ResultSection({ personality, isRoast, onRestart }: ResultSectionProps) {
   const [showProfile, setShowProfile] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
-  const isRoast = mode === 'roast';
-  const content = mode === 'praise' ? personality.praise : personality.roast;
+  const content = isRoast ? personality.roast : personality.praise;
 
-  // stagger in profile cards after a brief delay
   const cardData = [
     {
       icon: <MessageCircleHeart className="w-4 h-4 text-rose-500" />,
@@ -238,7 +196,7 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
       gradient: 'from-amber-50 to-yellow-50',
     },
     {
-      icon: <Heart className="w-4 h-4 text-red-500" />,
+      icon: <Flag className="w-4 h-4 text-red-500" />,
       label: '分手预警',
       text: personality.breakupReason,
       gradient: 'from-red-50 to-rose-50',
@@ -283,7 +241,7 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white via-rose-50/20 to-white">
-      {/* ---------- main scrollable content ---------- */}
+      {/* ---------- scrollable content ---------- */}
       <div className="flex-1 flex flex-col items-center justify-start px-4 pt-8 pb-28">
         <div className="w-full max-w-lg mx-auto">
           {/* ======== personality reveal card ======== */}
@@ -399,68 +357,30 @@ export default function ResultSection({ personality, onRestart }: ResultSectionP
             )}
           </AnimatePresence>
 
-          {/* ======== praise / roast choice ======== */}
+          {/* ======== reveal content button ======== */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 0.5 }}
             className="mt-8"
           >
-            <AnimatePresence mode="wait">
-              {mode === 'choose' ? (
-                <motion.div
-                  key="choose"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="text-center"
-                >
-                  <p className="text-gray-500 text-sm mb-5">准备好了吗？选择你的命运 ↓</p>
-                  <div className="flex gap-3 justify-center">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setMode('praise')}
-                      className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold text-white
-                                 bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400
-                                 shadow-lg shadow-amber-300/30
-                                 hover:shadow-xl hover:shadow-amber-300/50
-                                 transition-shadow cursor-pointer"
-                    >
-                      <ThumbsUp className="w-5 h-5" />
-                      使劲夸我
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setMode('roast')}
-                      className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-semibold text-white
-                                 bg-gradient-to-r from-orange-500 via-red-500 to-rose-600
-                                 shadow-lg shadow-red-300/30
-                                 hover:shadow-xl hover:shadow-red-300/50
-                                 transition-shadow cursor-pointer"
-                    >
-                      <Flame className="w-5 h-5" />
-                      使劲骂我
-                    </motion.button>
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key={mode}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <ContentDisplay
-                    content={content}
-                    isRoast={isRoast}
-                    onSwitch={() => setMode('choose')}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {!showContent ? (
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setShowContent(true)}
+                className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-semibold text-white cursor-pointer
+                  ${
+                    isRoast
+                      ? 'bg-gradient-to-r from-orange-500 via-red-500 to-rose-600 shadow-lg shadow-red-300/30 hover:shadow-xl hover:shadow-red-300/50'
+                      : 'bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-400 shadow-lg shadow-amber-300/30 hover:shadow-xl hover:shadow-amber-300/50'
+                  }`}
+              >
+                {isRoast ? '🔥 查看你的恋爱诊断报告' : '✨ 查看你的恋爱超能力'}
+              </motion.button>
+            ) : (
+              <ContentDisplay content={content} isRoast={isRoast} />
+            )}
           </motion.div>
         </div>
       </div>

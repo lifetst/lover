@@ -1,3 +1,121 @@
+# Worklog - Task 4: Verify Birthday + Roast Flow
+
+## Task ID
+4
+
+## Date
+2025-08-06
+
+## Summary
+Browser-based verification of the birthday-gated praise/roast flow on the 恋爱人格测试 website at http://localhost:3000/. Two tests performed: TEST A (normal birthday → praise) and TEST B (March 15 → roast). **All checks passed with no issues found.**
+
+## TEST A — Normal Birthday (January 15) → Should Show Praise
+
+### A1: Birthday Input Page
+- **Status**: ✅ PASS
+- **Details**: After clicking '开始测试' on the landing page, the birthday input page appeared with:
+  - Heading: "先告诉我们你的生日"
+  - Birthday emoji: 🎂
+  - Subtitle: "只需要月份和日期，不需要年份~"
+  - 12 month selector buttons (一月 through 十二月) — no year input ✅
+  - 31 day selector buttons (1–31), initially disabled until a month is selected
+  - '继续测试' button, initially disabled until both month and day are selected
+
+### A2: Select Month 1 (一月) and Day 15
+- **Status**: ✅ PASS
+- **Details**: Clicked 一月 → day buttons became enabled. Clicked 15 → '继续测试' button became enabled. Clicked '继续测试' → quiz started.
+
+### A3: Complete All 8 Quiz Questions
+- **Status**: ✅ PASS
+- **Details**: All 8 questions answered (option A each time). Questions:
+  1. 第一次约会，你会穿什么？
+  2. 对方三小时没回消息，你会？
+  3. 理想中的约会场景是？
+  4. 对方说"我需要一些个人空间"，你的反应是？
+  5. 你觉得恋爱中最重要的品质是？
+  6. 如果这段感情结束了，你会？
+  7. 情人节到了，你会怎么过？
+  8. 你发现对方偷偷翻了你手机，你会？
+
+### A4: Results Page — No '使劲夸我'/'使劲骂我' Buttons
+- **Status**: ✅ PASS
+- **Details**: Results page for 恋爱魔法师 showed these buttons:
+  - '查看完整恋爱档案'
+  - **'✨ 查看你的恋爱超能力'** (praise-themed single button) ✅
+  - '重新测试'
+  - '分享结果'
+  - NO '使劲夸我' or '使劲骂我' buttons present ✅
+
+### A5: Click '查看你的恋爱超能力' → Praise Content
+- **Status**: ✅ PASS
+- **Details**: After clicking the button:
+  - Header: "✨ 你的恋爱超能力"
+  - 4 praise lines appeared line by line with animation:
+    1. "你是这个越来越快餐化的时代里，最后一个还相信「一生一世一双人」的傻瓜——但也是最可爱的那种。"
+    2. "你谈恋爱的方式就像在拍电影——每一帧都精心构图，每句台词都反复推敲。别人觉得累，但你觉得值得。"
+    3. "你的浪漫不是花里胡哨的仪式感，而是「我记得你上次随口提过喜欢这个」的细水长流。这才是最高级的浪漫。"
+    4. "别人谈恋爱靠真心。老天爷一定给了你一颗比别人大两号的心。" (🎉)
+  - Closing: "就是这么优秀，不接受反驳 😎"
+  - **Styling verified**: All 4 line cards use amber/yellow gradient (`from-amber-50 to-yellow-50 border border-amber-200/50`) with amber number badges (`bg-amber-500`). Zero red/orange elements found. ✅
+  - **No roast content** present ✅
+
+---
+
+## TEST B — March 15 Birthday → Should Show Roast
+
+### B1: Reset and Enter Birthday March 15
+- **Status**: ✅ PASS
+- **Details**: Clicked '重新测试' → returned to landing page → clicked '开始测试' → selected 三月 (March) → selected day 15 → clicked '继续测试'. Quiz started.
+
+### B2: Complete All 8 Quiz Questions
+- **Status**: ✅ PASS
+- **Details**: All 8 questions answered (option A each time). Results page loaded.
+
+### B3: Results Page — Fire-Themed Single Button
+- **Status**: ✅ PASS
+- **Details**: Results page for 恋爱魔法师 showed these buttons:
+  - '查看完整恋爱档案'
+  - **'🔥 查看你的恋爱诊断报告'** (fire-themed single button) ✅
+  - '重新测试'
+  - '分享结果'
+  - NO '使劲夸我' or '使劲骂我' buttons present ✅
+  - Button text correctly differs from TEST A (诊断报告 vs 超能力) ✅
+
+### B4: Click '查看你的恋爱诊断报告' → Roast Content
+- **Status**: ✅ PASS
+- **Details**: After clicking the button:
+  - Header: "🔥 恋爱诊断报告"
+  - 4 roast lines appeared line by line with animation:
+    1. "你把每段恋爱都当成《泰坦尼克号》来演，问题是——你既不是 Rose 也不是 Jack，你是那个在甲板上等船来的人。"
+    2. "你的恋爱脑已经进化到了第四形态：不仅能给自己加戏，还能给别人加。一个「晚安」你都能脑补出一整集韩剧。"
+    3. "人家说「我今天有点累」，你的脑内剧场已经演到「ta 是不是不爱我了，要不要分手」了。冷静点，人家只是困了。"
+    4. "你的备胎名单比你的减肥计划还长，而且都一样——从未执行。下次别光写计划了，行动起来好吗？" (💅)
+  - Closing: "别生气，都是善意的提醒~ 💪"
+  - **Styling verified**: All 4 line cards use red/orange gradient (`from-red-50 to-orange-50 border border-red-200/50`) with red number badges (`bg-red-500`). Zero amber/yellow elements found. ✅
+  - **No praise content** present ✅
+
+---
+
+## Issues Found
+**None.** All checks passed successfully.
+
+## Key Behavioral Summary
+| Birthday | Button Text | Button Emoji | Content Type | Card Theme |
+|----------|-------------|-------------|-------------|------------|
+| Jan 15 (normal) | 查看你的恋爱超能力 | ✨ | Praise | Amber/Yellow |
+| Mar 15 (roast trigger) | 查看你的恋爱诊断报告 | 🔥 | Roast | Red/Orange |
+
+The old dual-button flow ('使劲夸我' / '使劲骂我') has been replaced with a single context-aware button determined by birthday, correctly routing users to either praise or roast content.
+
+## Technical Notes
+- Birthday gate is inserted between '开始测试' and the quiz questions.
+- Month/day selectors use button grids (no year input).
+- Day buttons are disabled until a month is selected; '继续测试' is disabled until both are selected.
+- The roast trigger date is March 15 (month=3, day=15).
+- Praise and roast content share the same 4-line structure and animation system but differ in header text, card theme colors, and content.
+
+---
+
 # Worklog - Task 9: Browser Verification of Love Personality Quiz Website
 
 ## Task ID
